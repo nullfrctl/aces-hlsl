@@ -44,8 +44,7 @@ float3 RRT( float3 aces)
   rgbPre = mult_f3_f33( rgbPre, RRT_SAT_MAT);
   */
 
-  // float3 rgbPre = rrt_sweeteners( aces);
-  float3 rgbPre = mult_f3_f33( aces, AP0_2_AP1_MAT);
+  float3 rgbPre = rrt_sweeteners( aces);
 
   // --- Apply the tonescale independently in rendering-space RGB --- //
   float3 rgbPost;
