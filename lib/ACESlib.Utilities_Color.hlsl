@@ -300,10 +300,7 @@ float3x3 calculate_rgb_to_rgb_matrix
                                              DEST_PRIMARIES.white,
                                              coneRespMat);
 
-  /* Equivalent to re-calculating the matrix like the CTL implementation
-   * does it. */
-  
-  const float3x3 XYZtoRGB_MAT = invert_f33( RGBtoXYZ_MAT);
+  const float3x3 XYZtoRGB_MAT = XYZtoRGB( DEST_PRIMARIES, 1.);
 
   return mult_f33_f33( RGBtoXYZ_MAT, mult_f33_f33( CAT, XYZtoRGB_MAT));
 }
