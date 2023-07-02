@@ -3,6 +3,11 @@
 
 #define M_PI 3.14159265359
 
+float pow10( float a1)
+{
+  return pow( 10., a1);
+}
+
 float3x3 mult_f33_f33(float3x3 a1, float3x3 a2)
 {
   return mul(a1, a2);
