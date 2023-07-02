@@ -144,6 +144,8 @@ float3 rrt_sweeteners( float3 _in)
   float hue = rgb_2_hue( aces);
   float centeredHue = center_hue( hue, RRT_RED_HUE);
   float hueWeight = cubic_basis_shaper( centeredHue, RRT_RED_WIDTH);
+  // float hueWeight = smoothstep( 0.0, 1.0, 1.0 - abs( 2.0 * centeredHue / RRT_RED_WIDTH));
+  // hueWeight *= hueWeight;
 
   aces.r += hueWeight * saturation * ( RRT_RED_PIVOT - aces.r) * ( 1. - RRT_RED_SCALE);
 

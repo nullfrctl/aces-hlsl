@@ -18,10 +18,11 @@
 
 float3 RRT( float3 aces)
 {
+  /*
   // --- Glow module --- //
   float saturation = rgb_2_saturation( aces);
   float ycIn = rgb_2_yc( aces);
-  float s = sigmoid_shaper( (saturation - 0.4) * 5.);
+  float s = sigmoid_shaper( (saturation - 0.4) * 0.5);
   float addedGlow = 1. + glow_fwd( ycIn, RRT_GLOW_GAIN *s, RRT_GLOW_MID);
 
   aces = mult_f_f3( addedGlow, aces);
@@ -41,6 +42,10 @@ float3 RRT( float3 aces)
 
   // --- Global desaturation --- //
   rgbPre = mult_f3_f33( rgbPre, RRT_SAT_MAT);
+  */
+
+  // float3 rgbPre = rrt_sweeteners( aces);
+  float3 rgbPre = mult_f3_f33( aces, AP0_2_AP1_MAT);
 
   // --- Apply the tonescale independently in rendering-space RGB --- //
   float3 rgbPost;

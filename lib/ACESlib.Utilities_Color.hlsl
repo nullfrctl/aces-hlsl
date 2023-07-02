@@ -366,7 +366,7 @@ float moncurve_r( float y, float gamma, float offs)
   else
     x = y * rs;
 
-  return y;
+  return x;
 }
 
 float3 moncurve_f_f3( float3 x, float gamma, float offs)

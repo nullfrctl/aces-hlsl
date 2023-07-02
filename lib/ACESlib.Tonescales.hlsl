@@ -63,41 +63,18 @@ float segmented_spline_c5_fwd
 
   // Check for negatives or zero before taking the log. If negative or zero,
   // set to HALF_MIN.
-  float logx = log10( max( x, 6.10352e-5f)); 
+  float logx = log10( max( x, 6.10352e-5)); 
 
   float logy;
 
-  if ( logx <= log10( C.minPoint.x))
+  if ( logx <= log10( C.minPoint.x)) {
     logy = logx * C.slopeLow + ( log10( C.minPoint.y) - C.slopeLow * log10( C.minPoint.x));
-  else if ( ( logx > log10( C.minPoint.x)) && ( logx < log10( C.midPoint.x))) {
+  } else if ( ( logx > log10( C.minPoint.x)) && ( logx < log10( C.midPoint.x))) {
     float knot_coord = ( N_KNOTS_LOW - 1) * ( logx - log10( C.minPoint.x)) / ( log10( C.midPoint.x) - log10( C.minPoint.x));
     int j = knot_coord;
     float t = knot_coord - j;
 
     float3 cf = float3( C.coefsLow[j], C.coefsLow[j + 1], C.coefsLow[j + 2]);
-    // NOTE: If the running a version of CTL < 1.5, you may get an 
-    // exception thrown error, usually accompanied by "Array index out of range" 
-    // If you receive this error, it is recommended that you update to CTL v1.5, 
-    // which contains a number of important bug fixes. Otherwise, you may try 
-    // uncommenting the below, which is longer, but equivalent to, the above 
-    // line of code.
-    //
-    // float cf[ 3];
-    // if ( j <= 0) {
-    //     cf[ 0] = C.coefsLow[0];  cf[ 1] = C.coefsLow[1];  cf[ 2] = C.coefsLow[2];
-    // } else if ( j == 1) {
-    //     cf[ 0] = C.coefsLow[1];  cf[ 1] = C.coefsLow[2];  cf[ 2] = C.coefsLow[3];
-    // } else if ( j == 2) {
-    //     cf[ 0] = C.coefsLow[2];  cf[ 1] = C.coefsLow[3];  cf[ 2] = C.coefsLow[4];
-    // } else if ( j == 3) {
-    //     cf[ 0] = C.coefsLow[3];  cf[ 1] = C.coefsLow[4];  cf[ 2] = C.coefsLow[5];
-    // } else if ( j == 4) {
-    //     cf[ 0] = C.coefsLow[4];  cf[ 1] = C.coefsLow[5];  cf[ 2] = C.coefsLow[6];
-    // } else if ( j == 5) {
-    //     cf[ 0] = C.coefsLow[5];  cf[ 1] = C.coefsLow[6];  cf[ 2] = C.coefsLow[7];
-    // } else if ( j == 6) {
-    //     cf[ 0] = C.coefsLow[6];  cf[ 1] = C.coefsLow[7];  cf[ 2] = C.coefsLow[8];
-    // } 
     
     float3 monomials = float3( t * t, t, 1.);
     logy = dot_f3_f3( monomials, mult_f3_f33( cf, M));
@@ -107,34 +84,12 @@ float segmented_spline_c5_fwd
     float t = knot_coord - j;
 
     float3 cf = float3( C.coefsHigh[j], C.coefsHigh[j + 1], C.coefsHigh[j + 2]); 
-    // NOTE: If the running a version of CTL < 1.5, you may get an 
-    // exception thrown error, usually accompanied by "Array index out of range" 
-    // If you receive this error, it is recommended that you update to CTL v1.5, 
-    // which contains a number of important bug fixes. Otherwise, you may try 
-    // uncommenting the below, which is longer, but equivalent to, the above 
-    // line of code.
-    //
-    // float cf[ 3];
-    // if ( j <= 0) {
-    //     cf[ 0] = C.coefsHigh[0];  cf[ 1] = C.coefsHigh[1];  cf[ 2] = C.coefsHigh[2];
-    // } else if ( j == 1) {
-    //     cf[ 0] = C.coefsHigh[1];  cf[ 1] = C.coefsHigh[2];  cf[ 2] = C.coefsHigh[3];
-    // } else if ( j == 2) {
-    //     cf[ 0] = C.coefsHigh[2];  cf[ 1] = C.coefsHigh[3];  cf[ 2] = C.coefsHigh[4];
-    // } else if ( j == 3) {
-    //     cf[ 0] = C.coefsHigh[3];  cf[ 1] = C.coefsHigh[4];  cf[ 2] = C.coefsHigh[5];
-    // } else if ( j == 4) {
-    //     cf[ 0] = C.coefsHigh[4];  cf[ 1] = C.coefsHigh[5];  cf[ 2] = C.coefsHigh[6];
-    // } else if ( j == 5) {
-    //     cf[ 0] = C.coefsHigh[5];  cf[ 1] = C.coefsHigh[6];  cf[ 2] = C.coefsHigh[7];
-    // } else if ( j == 6) {
-    //     cf[ 0] = C.coefsHigh[6];  cf[ 1] = C.coefsHigh[7];  cf[ 2] = C.coefsHigh[8];
-    // } 
 
     float3 monomials = float3( t * t, t, 1.);
     logy = dot_f3_f3( monomials, mult_f3_f33( cf, M));
-  } else //if ( logIn >= log10(C.maxPoint.x) ) { 
+  } else { //if ( logIn >= log10(C.maxPoint.x) ) { 
     logy = logx * C.slopeHigh + ( log10(C.maxPoint.y) - C.slopeHigh * log10(C.maxPoint.x) );
+  }
 
   return pow10(logy);
 }
@@ -308,29 +263,6 @@ float segmented_spline_c9_fwd
     float t = knot_coord - j;
 
     float3 cf = float3( C.coefsLow[j], C.coefsLow[j + 1], C.coefsLow[j + 2]);
-    // NOTE: If the running a version of CTL < 1.5, you may get an 
-    // exception thrown error, usually accompanied by "Array index out of range" 
-    // If you receive this error, it is recommended that you update to CTL v1.5, 
-    // which contains a number of important bug fixes. Otherwise, you may try 
-    // uncommenting the below, which is longer, but equivalent to, the above 
-    // line of code.
-    //
-    // float cf[ 3];
-    // if ( j <= 0) {
-    //     cf[ 0] = C.coefsLow[0];  cf[ 1] = C.coefsLow[1];  cf[ 2] = C.coefsLow[2];
-    // } else if ( j == 1) {
-    //     cf[ 0] = C.coefsLow[1];  cf[ 1] = C.coefsLow[2];  cf[ 2] = C.coefsLow[3];
-    // } else if ( j == 2) {
-    //     cf[ 0] = C.coefsLow[2];  cf[ 1] = C.coefsLow[3];  cf[ 2] = C.coefsLow[4];
-    // } else if ( j == 3) {
-    //     cf[ 0] = C.coefsLow[3];  cf[ 1] = C.coefsLow[4];  cf[ 2] = C.coefsLow[5];
-    // } else if ( j == 4) {
-    //     cf[ 0] = C.coefsLow[4];  cf[ 1] = C.coefsLow[5];  cf[ 2] = C.coefsLow[6];
-    // } else if ( j == 5) {
-    //     cf[ 0] = C.coefsLow[5];  cf[ 1] = C.coefsLow[6];  cf[ 2] = C.coefsLow[7];
-    // } else if ( j == 6) {
-    //     cf[ 0] = C.coefsLow[6];  cf[ 1] = C.coefsLow[7];  cf[ 2] = C.coefsLow[8];
-    // } 
     
     float3 monomials = float3( t * t, t, 1.);
     logy = dot_f3_f3( monomials, mult_f3_f33( cf, M));
@@ -340,29 +272,6 @@ float segmented_spline_c9_fwd
     float t = knot_coord - j;
 
     float3 cf = float3( C.coefsHigh[j], C.coefsHigh[j + 1], C.coefsHigh[j + 2]); 
-    // NOTE: If the running a version of CTL < 1.5, you may get an 
-    // exception thrown error, usually accompanied by "Array index out of range" 
-    // If you receive this error, it is recommended that you update to CTL v1.5, 
-    // which contains a number of important bug fixes. Otherwise, you may try 
-    // uncommenting the below, which is longer, but equivalent to, the above 
-    // line of code.
-    //
-    // float cf[ 3];
-    // if ( j <= 0) {
-    //     cf[ 0] = C.coefsHigh[0];  cf[ 1] = C.coefsHigh[1];  cf[ 2] = C.coefsHigh[2];
-    // } else if ( j == 1) {
-    //     cf[ 0] = C.coefsHigh[1];  cf[ 1] = C.coefsHigh[2];  cf[ 2] = C.coefsHigh[3];
-    // } else if ( j == 2) {
-    //     cf[ 0] = C.coefsHigh[2];  cf[ 1] = C.coefsHigh[3];  cf[ 2] = C.coefsHigh[4];
-    // } else if ( j == 3) {
-    //     cf[ 0] = C.coefsHigh[3];  cf[ 1] = C.coefsHigh[4];  cf[ 2] = C.coefsHigh[5];
-    // } else if ( j == 4) {
-    //     cf[ 0] = C.coefsHigh[4];  cf[ 1] = C.coefsHigh[5];  cf[ 2] = C.coefsHigh[6];
-    // } else if ( j == 5) {
-    //     cf[ 0] = C.coefsHigh[5];  cf[ 1] = C.coefsHigh[6];  cf[ 2] = C.coefsHigh[7];
-    // } else if ( j == 6) {
-    //     cf[ 0] = C.coefsHigh[6];  cf[ 1] = C.coefsHigh[7];  cf[ 2] = C.coefsHigh[8];
-    // } 
 
     float3 monomials = float3( t * t, t, 1.);
     logy = dot_f3_f3( monomials, mult_f3_f33( cf, M));
