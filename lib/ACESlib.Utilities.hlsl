@@ -59,7 +59,7 @@ float3 pow_f3( float3 a, float b)
 
 float3 pow10_f3( float3 a)
 {
-  return pow( 10.0f, a);
+  return pow( 10., a);
 }
 
 /* Functionaly irrelevant as `log10()` supports float3 parameters natively.
@@ -75,7 +75,7 @@ float3 log10_f3( float3 a)
 
 float round( float x)
 {
-  return trunc( x < 0.0 ? x - 0.5 : x + 0.5);
+  return trunc( x < 0. ? x - 0.5 : x + 0.5);
 }
 
 /* `log2()` excluded as `log2()` is already an HLSL intrinsic and would cause
