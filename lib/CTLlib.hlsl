@@ -53,6 +53,11 @@ float4x4 transpose_f44(float4x4 a1)
   return transpose(a1);
 }
 
+float dot_f3_f3(float3 a1, float3 a2)
+{
+  return dot(a1, a2);
+}
+
 float3x3 invert_f33(float3x3 m)
 {
   float3x3 adj;
