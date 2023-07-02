@@ -1,5 +1,5 @@
-#ifndef _ACES_LIB_UTILITIES
-#define _ACES_LIB_UTILITIES
+#ifndef _ACES_LIB_UTILITIES_COLOR
+#define _ACES_LIB_UTILITIES_COLOR
 
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:ACESlib.Utilities_Color.a1.1.0</ACEStransformID>
 // <ACESuserName>ACES 1.0 Lib - Color Utilities</ACESuserName>
@@ -223,7 +223,9 @@ float rgb_2_yc( float3 rgb, float ycRadiusWeight = 1.75)
   // ycRadiusWeight = 2 -> YC for pure red, green, blue  == YC for  neutral of 
   // same value.
 
-  float r, g, b = rgb;
+  float r = rgb.r;
+  float g = rgb.g;
+  float b = rgb.b;
   float chroma = sqrt( b * ( b - g) + g * ( g - r) + r * ( r - b));
   
   return ( b + g + r + ycRadiusWeight * chroma) / 3.;
@@ -231,7 +233,7 @@ float rgb_2_yc( float3 rgb, float ycRadiusWeight = 1.75)
 
 /* ---- Chromatic Adaptation ---- */
 
-static const float CONE_RESP_MAT_BRADFORD = {
+static const float3x3 CONE_RESP_MAT_BRADFORD = {
   { 0.89510, -0.75020,  0.03890},
   { 0.26640,  1.71350, -0.06850},
   {-0.16140,  0.03670,  1.02960}
@@ -627,4 +629,4 @@ float3 HLG_2_ST2084_1000nits_f3( float3 HLG)
   return PQ;
 }
 
-#endif // _ACES_LIB_UTILITIES
+#endif // _ACES_LIB_UTILITIES_COLOR

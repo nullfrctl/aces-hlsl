@@ -8,7 +8,7 @@ float3x3 mult_f33_f33(float3x3 a1, float3x3 a2)
   return mul(a1, a2);
 }
 
-float3x3 mult_f44_f44(float4x4 a1, float4x4 a2)
+float4x4 mult_f44_f44(float4x4 a1, float4x4 a2)
 {
   return mul(a1, a2);
 }
@@ -86,7 +86,7 @@ struct Chromaticities
 {
   float2 red;
   float2 green;
-  float3 blue;
+  float2 blue;
   float2 white;
 };
 
