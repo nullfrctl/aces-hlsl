@@ -3,9 +3,19 @@
 
 #define M_PI 3.14159265359
 
+float fabs( float a1)
+{
+  return abs(a1);
+}
+
 float pow10( float a1)
 {
   return pow( 10., a1);
+}
+
+float3 mult_f_f3(float a1, float3 a2)
+{
+  return a1 * a2;
 }
 
 float3x3 mult_f33_f33(float3x3 a1, float3x3 a2)
