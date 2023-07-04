@@ -34,9 +34,9 @@ float ACEScc_to_lin( float _in)
 float3 ACEScc_to_ACES( float3 ACEScc)
 {
   float3 lin_AP1;
-  lin_AP1.r = ACEScc_to_lin( lin_AP1.r);
-  lin_AP1.g = ACEScc_to_lin( lin_AP1.g);
-  lin_AP1.b = ACEScc_to_lin( lin_AP1.b);
+  lin_AP1.r = ACEScc_to_lin( ACEScc.r);
+  lin_AP1.g = ACEScc_to_lin( ACEScc.g);
+  lin_AP1.b = ACEScc_to_lin( ACEScc.b);
 
   float3 ACES = mult_f3_f33( lin_AP1, AP1_2_AP0_MAT);
 
