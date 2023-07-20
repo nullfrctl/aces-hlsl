@@ -15,7 +15,12 @@
 
 // Target white and black points for cinema system tonescale
 static const float CINEMA_WHITE = 48.;
+#ifndef __RESHADE__
 static const float CINEMA_BLACK = pow10( log10( 0.02)); // CINEMA_WHITE / 2400. 
+#else
+#define CINEMA_BLACK pow10( log10( 0.02))
+#endif
+
 // CINEMA_BLACK is defined in this roundabout manner in order to be exactly equal to 
 // the result returned by the cinema 48-nit ODT tonescale.
 // Though the min point of the tonescale is designed to return 0.02, the tonescale is 
@@ -30,9 +35,13 @@ static const float DIM_SURROUND_GAMMA = 0.9811;
 
 // Saturation compensation factor
 static const float ODT_SAT_FACTOR = 0.93;
+#ifndef __RESHADE__
 static const float3x3 ODT_SAT_MAT = calc_sat_adjust_matrix( ODT_SAT_FACTOR, AP1_RGB2Y);
-
 static const float3x3 D60_2_D65_CAT = calculate_cat_matrix( AP0.white, REC709_PRI.white);
+#else
+#define ODT_SAT_MAT calc_sat_adjust_matrix( ODT_SAT_FACTOR, AP1_RGB2Y)
+#define D60_2_D65_CAT calculate_cat_matrix( AP0.white, REC709_PRI.white)
+#endif
 
 float Y_2_linCV( float Y, float Ymax, float Ymin)
 {

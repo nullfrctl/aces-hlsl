@@ -10,13 +10,17 @@
 #include "ACESlib.Utilities_Color.hlsl"
 
 // Textbook monomial to basis-function conversion matrix.
-static const float3x3 M = {
-  {  0.5, -1.0, 0.5 },
-  { -1.0,  1.0, 0.5 },
-  {  0.5,  0.0, 0.0 }
-};
+static const float3x3 M = float3x3(
+   0.5, -1.0, 0.5,
+  -1.0,  1.0, 0.5,
+   0.5,  0.0, 0.0
+);
 
+#ifndef __RESHADE__
 typedef float2 SplineMapPoint;
+#else
+#define SplineMapPoint float2
+#endif
 
 struct SegmentedSplineParams_c5
 {
@@ -40,6 +44,7 @@ struct SegmentedSplineParams_c9
   float slopeHigh;      // log-log slope of high linear extension
 };
 
+#ifndef __RESHADE__
 static const SegmentedSplineParams_c5 RRT_PARAMS =
 {
   // coefsLow[6]
@@ -52,10 +57,28 @@ static const SegmentedSplineParams_c5 RRT_PARAMS =
   0.0,  // slopeLow
   0.0   // slopeHigh
 };
+#else
+SegmentedSplineParams_c5 _RRT_PARAMS()
+{
+  SegmentedSplineParams_c5 params;
+  // coefsLow[6]
+  params.coefsLow = { -4.0000000000, -4.0000000000, -3.1573765773, -0.4852499958, 1.8477324706, 1.8477324706 };
+  // coefsHigh[6]
+  params.coefsHigh = { -0.7185482425, 2.0810307172, 3.6681241237, 4.0000000000, 4.0000000000, 4.0000000000 };
+  params.minPoint = float2( 0.18*pow(2.,-15), 0.0001);    // minPoint
+  params.midPoint = float2( 0.18,                4.8);    // midPoint  
+  params.maxPoint = float2( 0.18*pow(2., 18), 10000.);    // maxPoint
+  params.slopeLow = 0.0;  // slopeLow
+  params.slopeHigh = 0.0;  // slopeHigh
+
+  return params;
+}
+#define RRT_PARAMS _RRT_PARAMS()
+#endif
 
 float segmented_spline_c5_fwd
   ( float x,
-    SegmentedSplineParams_c5 C = RRT_PARAMS
+    SegmentedSplineParams_c5 C
   )
 {
   const int N_KNOTS_LOW = 4;
@@ -94,9 +117,14 @@ float segmented_spline_c5_fwd
   return pow10(logy);
 }
 
+float segmented_spline_c5_fwd(float x)
+{
+  return segmented_spline_c5_fwd(x, RRT_PARAMS);
+}
+
 float segmented_spline_c5_rev
   ( float y,
-    SegmentedSplineParams_c5 C = RRT_PARAMS
+    SegmentedSplineParams_c5 C
   )
 {  
   const int N_KNOTS_LOW = 4;
@@ -190,6 +218,12 @@ float segmented_spline_c5_rev
   return pow10( logx);
 }
 
+float segmented_spline_c5_rev(float y)
+{
+  return segmented_spline_c5_rev(y, RRT_PARAMS);
+}
+
+#ifndef __RESHADE__
 static const SegmentedSplineParams_c9 ODT_48nits =
 {
   // coefsLow[10]
@@ -241,6 +275,71 @@ static const SegmentedSplineParams_c9 ODT_4000nits =
   3.0,  // slopeLow
   0.3   // slopeHigh
 };
+#else
+SegmentedSplineParams_c9 _ODT_48nits()
+{
+  SegmentedSplineParams_c9 params;
+  // coefsLow[10]
+  params.coefsLow = { -1.6989700043, -1.6989700043, -1.4779000000, -1.2291000000, -0.8648000000, -0.4480000000, 0.0051800000, 0.4511080334, 0.9113744414, 0.9113744414};
+  // coefsHigh[10]
+  params.coefsHigh = { 0.5154386965, 0.8470437783, 1.1358000000, 1.3802000000, 1.5197000000, 1.5985000000, 1.6467000000, 1.6746091357, 1.6878733390, 1.6878733390 };
+  params.minPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,-6.5) ),  0.02);    // minPoint
+  params.midPoint = float2( segmented_spline_c5_fwd( 0.18 ),                4.8);    // midPoint  
+  params.maxPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,6.5) ),   48.0);    // maxPoint
+  params.slopeLow = 0.0;  // slopeLow
+  params.slopeHigh = 0.04;  // slopeHigh
+  return params;
+}
+#define ODT_48nits _ODT_48nits()
+
+SegmentedSplineParams_c9 _ODT_1000nits()
+{
+  SegmentedSplineParams_c9 params;
+  // coefsLow[10]
+  params.coefsLow = { -4.9706219331, -3.0293780669, -2.1262, -1.5105, -1.0578, -0.4668, 0.11938, 0.7088134201, 1.2911865799, 1.2911865799 };
+  // coefsHigh[10]
+  params.coefsHigh = { 0.8089132070, 1.1910867930, 1.5683, 1.9483, 2.3083, 2.6384, 2.8595, 2.9872608805, 3.0127391195, 3.0127391195 };
+  params.minPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,-12.) ), 0.0001);    // minPoint
+  params.midPoint = float2( segmented_spline_c5_fwd( 0.18 ),                10.0);    // midPoint  
+  params.maxPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,10.) ),  1000.0);    // maxPoint
+  params.slopeLow = 3.0;  // slopeLow
+  params.slopeHigh = 0.06;  // slopeHigh
+  params;
+}
+#define ODT_1000nits _ODT_1000nits()
+
+SegmentedSplineParams_c9 _ODT_2000nits()
+{
+  SegmentedSplineParams_c9 params;
+  // coefsLow[10]
+  params.coefsLow = { -4.9706219331, -3.0293780669, -2.1262, -1.5105, -1.0578, -0.4668, 0.11938, 0.7088134201, 1.2911865799, 1.2911865799 };
+  // coefsHigh[10]
+  params.coefsHigh = { 0.8019952042, 1.1980047958, 1.5943000000, 1.9973000000, 2.3783000000, 2.7684000000, 3.0515000000, 3.2746293562, 3.3274306351, 3.3274306351 };
+  params.minPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,-12.) ), 0.0001);    // minPoint
+  params.midPoint = float2( segmented_spline_c5_fwd( 0.18 ),                10.0);    // midPoint  
+  params.maxPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,11.) ),  2000.0);    // maxPoint
+  params.slopeLow = 3.0;  // slopeLow
+  params.slopeHigh = 0.12;  // slopeHigh
+  return params;
+}
+#define ODT_2000nits _ODT_2000nits()
+
+SegmentedSplineParams_c9 _ODT_4000nits()
+{
+  SegmentedSplineParams_c9 params;
+  // coefsLow[10]
+  params.coefsLow = { -4.9706219331, -3.0293780669, -2.1262, -1.5105, -1.0578, -0.4668, 0.11938, 0.7088134201, 1.2911865799, 1.2911865799 };
+  // coefsHigh[10]
+  params.coefsHigh = { 0.7973186613, 1.2026813387, 1.6093000000, 2.0108000000, 2.4148000000, 2.8179000000, 3.1725000000, 3.5344995451, 3.6696204376, 3.6696204376 };
+  params.minPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,-12.) ), 0.0001);    // minPoint
+  params.midPoint = float2( segmented_spline_c5_fwd( 0.18 ),                10.0);    // midPoint  
+  params.maxPoint = float2( segmented_spline_c5_fwd( 0.18*pow(2.,12.) ),  4000.0);    // maxPoint
+  params.slopeLow = 3.0;  // slopeLow
+  params.slopeHigh = 0.3;   // slopeHigh
+  return params;
+}
+#define ODT_4000nits _ODT_4000nits()
+#endif
 
 float segmented_spline_c9_fwd
   ( float x,
@@ -361,7 +460,7 @@ float segmented_spline_c9_rev
 
     logx = log10( C.minPoint.x) + ( t + j) * KNOT_INC_LOW;
   } else if ( ( logy > log10( C.midPoint.y)) && ( logy < log10( C.maxPoint.y))) {
-    unsigned int j;
+    uint j;
     float3 cf;
 
     if ( logy > KNOT_Y_HIGH[0] && logy <= KNOT_Y_HIGH[1]) {

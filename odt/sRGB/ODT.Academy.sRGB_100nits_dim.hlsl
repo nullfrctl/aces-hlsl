@@ -54,8 +54,13 @@
 #include "../../lib/ACESlib.Tonescales.hlsl"
 
 /* --- ODT Parameters --- */
+#ifndef __RESHADE__
 static const Chromaticities DISPLAY_PRI = REC709_PRI;
 static const float3x3 XYZ_2_DISPLAY_PRI_MAT = XYZtoRGB(DISPLAY_PRI, 1.0);
+#else
+#define DISPLAY_PRI REC709_PRI
+#define XYZ_2_DISPLAY_PRI_MAT XYZtoRGB(DISPLAY_PRI, 1.0)
+#endif
 
 // NOTE: The EOTF is *NOT* gamma 2.4, it follows IEC 61966-2-1:1999
 static const float DISPGAMMA = 2.4; 
