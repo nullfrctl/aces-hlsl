@@ -112,4 +112,7 @@ float3 ODT_RGB_monitor( float3 oces)
   return outputCV;
 }
 
+#undef DISPLAY_PRI
+#undef XYZ_2_DISPLAY_PRI_MAT 
+
 #endif // _ACES_ODT_sRGB_100nits_DIM

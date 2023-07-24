@@ -18,9 +18,7 @@
 static const Chromaticities DISPLAY_PRI = REC709_PRI;
 static const float3x3 DISPLAY_PRI_2_XYZ_MAT = RGBtoXYZ( DISPLAY_PRI, 1.0);
 #else
-#ifndef DISPLAY_PRI
 #define DISPLAY_PRI REC709_PRI
-#endif
 #define DISPLAY_PRI_2_XYZ_MAT RGBtoXYZ( DISPLAY_PRI, 1.0)
 #endif
 
@@ -64,5 +62,8 @@ float3 InvODT_RGB_monitor( float3 outputCV)
   float3 oces = mult_f3_f33( rgbPost, AP1_2_AP0_MAT);
   return oces;
 }
+
+#undef DISPLAY_PRI
+#undef DISPLAY_PRI_2_XYZ_MAT
 
 #endif // _ACES_ODT_sRGB_100nits_DIM
