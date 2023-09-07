@@ -46,7 +46,7 @@
 
 #include "../../lib/ACESlib.Utilities.hlsl"
 #include "../../lib/ACESlib.Transform_Common.hlsl"
-#i/nclude "../../lib/ACESlib.ODT_Common.hlsl"
+#include "../../lib/ACESlib.ODT_Common.hlsl"
 #include "../../lib/ACESlib.Tonescales.hlsl"
 
 float3 ODT_sRGB( float3 oces)
