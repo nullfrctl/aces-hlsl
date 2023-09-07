@@ -25,15 +25,7 @@ static const float RRT_RED_WIDTH = 135.;
 
 // Desaturation contants
 static const float RRT_SAT_FACTOR = 0.96;
-#ifndef __RESHADE__
 static const float3x3 RRT_SAT_MAT = calc_sat_adjust_matrix( RRT_SAT_FACTOR, AP1_RGB2Y);// "Glow" module constants
-#else
-float3x3 _RRT_SAT_MAT()
-{
-  return calc_sat_adjust_matrix( RRT_SAT_FACTOR, AP1_RGB2Y);
-}
-#define RRT_SAT_MAT _RRT_SAT_MAT()
-#endif
 
 // ------- Glow module functions
 float glow_fwd( float ycIn, float glowGainIn, float glowMid)
@@ -80,10 +72,10 @@ float cubic_basis_shaper
     float w // full base width of the shaper function (in degrees)
   )
 {
-  float4x4 M = float4x4( -1. / 6,  3. / 6, -3. / 6,  1. / 6,
-                          3. / 6, -6. / 6,  3. / 6,  0. / 6,
-                         -3. / 6,  0. / 6,  3. / 6,  0. / 6,
-                          1. / 6,  4. / 6,  1. / 6,  0. / 6 );
+  float4x4 M = { { -1. / 6,  3. / 6, -3. / 6,  1. / 6 },
+                 {  3. / 6, -6. / 6,  3. / 6,  0. / 6 },
+                 { -3. / 6,  0. / 6,  3. / 6,  0. / 6 },
+                 {  1. / 6,  4. / 6,  1. / 6,  0. / 6 } };
 
   float knots[5] = { -w * 0.5,
                      -w * 0.25,
