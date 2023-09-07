@@ -133,6 +133,7 @@ float uncenter_hue( float hueCentered, float centerH)
   return hue;
 }
 
+// input is AP0 and output is AP1
 float3 rrt_sweeteners( float3 _in)
 {
   float3 aces = _in;
@@ -165,6 +166,7 @@ float3 rrt_sweeteners( float3 _in)
   return rgbPre;
 }
 
+// input is AP1 and output is AP0
 float3 inv_rrt_sweeteners( float3 _in)
 {
   float3 rgbPost = _in;

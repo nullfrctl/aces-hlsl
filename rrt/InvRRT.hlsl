@@ -28,6 +28,9 @@ float3 InvRRT( float3 oces)
   rgbPost.g = segmented_spline_c5_rev( rgbPre.g);
   rgbPost.b = segmented_spline_c5_rev( rgbPre.b);
 
+	float3 aces = inv_rrt_sweeteners(rgbPost);
+
+	/*
 	// --- Global desaturation --- //
 	rgbPost = mult_f3_f33( rgbPost, invert_f33(RRT_SAT_MAT));
 	rgbPost = clamp_f3( rgbPost, 0., 65504.);
@@ -61,6 +64,7 @@ float3 InvRRT( float3 oces)
 	float reducedGlow = 1. + glow_inv( ycOut, RRT_GLOW_GAIN *s, RRT_GLOW_MID);
 
 	aces = mult_f_f3( ( reducedGlow), aces);
+	*/
 
 	return aces;
 }
