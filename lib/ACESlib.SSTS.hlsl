@@ -4,7 +4,7 @@
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:ACESlib.SSTS.a1.1.0</ACEStransformID>
 // <ACESuserName>ACES 1.0 Lib - SSTS</ACESuserName>
 
-#include "CTLlib.hlsl"
+#include "ACESlib.CTL.hlsl"
 #include "ACESlib.Transform_Common.hlsl"
 
 //
@@ -160,7 +160,7 @@ float ssts
 
   // Check for negatives or zero before taking the log. If negative or zero,
   // set to HALF_MIN
-  float logx = log10( max( x, TINY));
+  float logx = log10( max( x, HALF_MIN));
   float logy;
 
   if ( logx <= log10( C.Min.x)) {

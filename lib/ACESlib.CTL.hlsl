@@ -1,7 +1,18 @@
-#ifndef _CTL_LIB
-#define _CTL_LIB
+#ifndef _ACESLIB_CTL_
+#define _ACESLIB_CTL_
 
-#define M_PI 3.14159265359
+static const float M_E = 2.7182818284590452354;
+static const float M_PI = 3.14159265358979323846;
+
+static const float FLT_MAX = asfloat(0x7F7FFFFF);
+static const float FLT_MIN = asfloat(0x00800000);
+static const float FLT_POS_INF = asfloat(0x7FFFFFFF);
+static const float FLT_NEG_INF = asfloat(0xFFFFFFFF);
+
+static const float HALF_MAX = +65504.;
+static const float HALF_MIN = asfloat(0x38800000);
+static const float HALF_POS_INF = +65536.;
+static const float HALF_NEG_INF = -65536.;
 
 float fabs( float a1)
 {
@@ -178,4 +189,4 @@ float HACK_interpolate1D( const float table[2][2], float value)
   return lerp( table[0][1], table[1][1], t);
 }
 
-#endif // _CTL_LIB
+#endif // _ACESLIB_CTL_

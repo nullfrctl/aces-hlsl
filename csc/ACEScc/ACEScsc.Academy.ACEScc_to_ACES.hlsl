@@ -25,10 +25,10 @@ float ACEScc_to_lin( float _in)
 {
   if ( _in < -0.3013698630)
     return ( exp2( _in * 17.52 - 9.72) - exp2( -16.)) * 2.;
-  else if ( _in < ( log2( 65504.) + 9.72) / 17.52)
+  else if ( _in < ( log2( HALF_MAX) + 9.72) / 17.52)
     return exp2( _in * 17.52 - 9.72);
-  else // ( _in >= ( log2( 65504.) + 9.72) / 17.52)
-    return 65504.;
+  else // ( _in >= ( log2( HALF_MAX) + 9.72) / 17.52)
+    return HALF_MAX;
 }
 
 float3 ACEScc_to_ACES( float3 ACEScc)

@@ -33,7 +33,7 @@ float lin_to_ACEScc( float _in)
 
 float3 ACES_to_ACEScc( float3 ACES)
 {
-  ACES = clamp_f3( ACES, 0., 65504.);
+  ACES = clamp_f3( ACES, 0., HALF_POS_INF);
   // NOTE: (from Annex A of S-2014-003)
   // When ACES values are matrixed into the smaller AP1 space, colors outside 
   // the AP1 gamut can generate negative values even before the log encoding. 

@@ -4,7 +4,7 @@
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:ACESlib.Tonescales.a1.0.3</ACEStransformID>
 // <ACESuserName>ACES 1.0 Lib - Tonescales</ACESuserName>
 
-#include "CTLlib.hlsl"
+#include "ACESlib.CTL.hlsl"
 #include "ACESlib.Transform_Common.hlsl"
 #include "ACESlib.Utilities.hlsl"
 #include "ACESlib.Utilities_Color.hlsl"
@@ -63,7 +63,7 @@ float segmented_spline_c5_fwd
 
   // Check for negatives or zero before taking the log. If negative or zero,
   // set to HALF_MIN.
-  float logx = log10( max( x, 6.10352e-5)); 
+  float logx = log10( max( x, HALF_MIN)); // log10( max( x, 6.10352e-5)); 
 
   float logy;
 
@@ -252,7 +252,7 @@ float segmented_spline_c9_fwd
 
   // Check for negatives or zero before taking the log. If negative or zero,
   // set to HALF_MIN.
-  float logx = log10( max( x, 6.10352e-5f)); 
+  float logx = log10( max( x, HALF_MIN)); 
   float logy;
 
   if ( logx <= log10( C.minPoint.x) )

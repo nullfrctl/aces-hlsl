@@ -8,7 +8,7 @@
 // Contains functions used for forward and inverse Output Transforms (RRT+ODT) 
 //
 
-#include "CTLlib.hlsl"
+#include "ACESlib.CTL.hlsl"
 #include "ACESlib.Transform_Common.hlsl"
 #include "ACESlib.RRT_Common.hlsl"
 #include "ACESlib.ODT_Common.hlsl"
@@ -36,7 +36,7 @@ float3 limit_to_primaries
 float3 dark_to_dim( float3 XYZ)
 {
   float3 xyY = XYZ_2_xyY( XYZ);
-  xyY.y = clamp( xyY.y, 0., 65503.);
+  xyY.y = clamp( xyY.y, 0., HALF_POS_INF);
   xyY.y = pow( xyY.y, DIM_SURROUND_GAMMA);
 
   return xyY_2_XYZ( xyY);
@@ -45,7 +45,7 @@ float3 dark_to_dim( float3 XYZ)
 float3 dim_to_dark( float3 XYZ)
 {
   float3 xyY = XYZ_2_xyY( XYZ);
-  xyY.y = clamp( xyY.y, 0., 65503.);
+  xyY.y = clamp( xyY.y, 0., HALF_POS_INF);
   xyY.y = pow( xyY.y, rcp( DIM_SURROUND_GAMMA));
 
   return xyY_2_XYZ( xyY);

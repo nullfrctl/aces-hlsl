@@ -8,7 +8,7 @@
 // Color related static constants and functions
 //
 
-#include "CTLlib.hlsl"
+#include "ACESlib.CTL.hlsl"
 #include "ACESlib.Utilities.hlsl"
 
 /* ---- Chromaticities of some common primary sets ---- */

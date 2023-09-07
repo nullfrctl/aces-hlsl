@@ -8,7 +8,7 @@
 // Contains functions and constants shared by forward and inverse ODT transforms 
 //
 
-#include "CTLlib.hlsl"
+#include "ACESlib.CTL.hlsl"
 #include "ACESlib.Utilities.hlsl"
 #include "ACESlib.Utilities_Color.hlsl"
 #include "ACESlib.Transform_Common.hlsl"
@@ -67,7 +67,7 @@ float3 darkSurround_to_dimSurround( float3 linearCV)
   float3 XYZ = mult_f3_f33( linearCV, AP1_2_XYZ_MAT);
   float3 xyY = XYZ_2_xyY( XYZ);
 
-  xyY.z = clamp( xyY.z, 0., 65504.);
+  xyY.z = clamp( xyY.z, 0., HALF_POS_INF);
   xyY.z = pow( xyY.z, rcp( DIM_SURROUND_GAMMA));
   XYZ = xyY_2_XYZ(xyY);
 
@@ -79,7 +79,7 @@ float3 dimSurround_to_darkSurround( float3 linearCV)
   float3 XYZ = mult_f3_f33( linearCV, AP1_2_XYZ_MAT);
   float3 xyY = XYZ_2_xyY( XYZ);
 
-  xyY.z = clamp( xyY.z, 0., 65504.);
+  xyY.z = clamp( xyY.z, 0., HALF_POS_INF);
   xyY.z = pow( xyY.z, rcp( DIM_SURROUND_GAMMA));
   XYZ = xyY_2_XYZ(xyY);
 

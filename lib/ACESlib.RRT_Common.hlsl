@@ -8,7 +8,7 @@
 // Contains functions and constants shared by forward and inverse RRT transforms
 //
 
-#include "CTLlib.hlsl"
+#include "ACESlib.CTL.hlsl"
 #include "ACESlib.Utilities.hlsl"
 #include "ACESlib.Utilities_Color.hlsl"
 #include "ACESlib.Transform_Common.hlsl"
@@ -156,9 +156,9 @@ float3 rrt_sweeteners( float3 _in)
   aces.r += hueWeight * saturation * ( RRT_RED_PIVOT - aces.r) * ( 1. - RRT_RED_SCALE);
 
   // --- ACES to RGB rendering space --- //
-  aces = clamp_f3( aces, 0., 65504.);
+  aces = clamp_f3( aces, 0., HALF_POS_INF);
   float3 rgbPre = mult_f3_f33( aces, AP0_2_AP1_MAT);
-  rgbPre = clamp_f3( rgbPre, 0., 65504.);
+  rgbPre = clamp_f3( rgbPre, 0., HALF_MAX);
 
   // --- Global desaturation --- //
   rgbPre = mult_f3_f33( rgbPre, RRT_SAT_MAT);
@@ -174,12 +174,12 @@ float3 inv_rrt_sweeteners( float3 _in)
   // --- Global desaturation --- //
   rgbPost = mult_f3_f33( rgbPost, invert_f33(RRT_SAT_MAT));
   
-  rgbPost = clamp_f3( rgbPost, 0., 65504.);
+  rgbPost = clamp_f3( rgbPost, 0., HALF_MAX);
 
   // --- RGB rendering space to ACES --- //
   float3 aces = mult_f3_f33( rgbPost, AP1_2_AP0_MAT);
   
-  aces = clamp_f3( aces, 0., 65504.);
+  aces = clamp_f3( aces, 0., HALF_MAX);
 
   // --- Red modifier --- //
   float hue = rgb_2_hue( aces);
