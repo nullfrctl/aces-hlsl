@@ -72,6 +72,7 @@ float3 ODT_sRGB( float3 oces)
   float3 linearCV;
   linearCV.r = Y_2_linCV( rgbPost.r, CINEMA_WHITE, CINEMA_BLACK);
   linearCV.g = Y_2_linCV( rgbPost.g, CINEMA_WHITE, CINEMA_BLACK);
+  linearCV.b = Y_2_linCV( rgbPost.b, CINEMA_WHITE, CINEMA_BLACK);
 
   // Apply gamma adjustment to compensate for dim surround
   linearCV = darkSurround_to_dimSurround( linearCV);
