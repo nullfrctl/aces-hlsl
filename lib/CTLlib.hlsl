@@ -171,4 +171,11 @@ float3x3 XYZtoRGB( const Chromaticities chroma, float Y)
   return invert_f33(RGBtoXYZ(chroma, Y));
 }
 
+// only use for special cases; labelled different because of this
+float HACK_interpolate1D( const float table[2][2], float value)
+{
+  float t = saturate( ( value - table[0][0]) / ( table[1][0] - table[0][0]));
+  return lerp( table[0][1], table[1][1], t);
+}
+
 #endif // _CTL_LIB
