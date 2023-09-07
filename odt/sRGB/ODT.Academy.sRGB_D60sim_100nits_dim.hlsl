@@ -1,3 +1,6 @@
+#ifndef _ACESODT_sRGB_D60SIM_100NITS_DIM
+#define _ACESODT_sRGB_D60SIM_100NITS_DIM
+
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:ODT.Academy.RGBmonitor_D60si_100nits_dim.a1.0.3</ACEStransformID>
 // <ACESuserName>ACES 1.0 Output - sRGB (D60 sim.)</ACESuserName>
 
@@ -57,7 +60,7 @@ float3 ODT_sRGB( float3 oces)
 
   // NOTE: The (inverse) EOTF is *NOT* gamma 2.4, it follows IEC 61966-2-1:1999
   const float DISPGAMMA = 2.4;
-  const float offset = 0.055;
+  const float OFFSET = 0.055;
 
   const float SCALE = 0.955;
 
@@ -118,3 +121,5 @@ float3 ODT_sRGB( float3 oces)
 
   return outputCV;
 }
+
+#endif
