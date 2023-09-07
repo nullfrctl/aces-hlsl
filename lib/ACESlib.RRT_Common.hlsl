@@ -27,12 +27,16 @@ static const float RRT_RED_WIDTH = 135.;
 static const float RRT_SAT_FACTOR = 0.96;
 static const float3x3 RRT_SAT_MAT = calc_sat_adjust_matrix( RRT_SAT_FACTOR, AP1_RGB2Y);// "Glow" module constants
 
+// one sixth and two thirds precomputed
+const float sixth = 1.0/6.0;
+static const float tthrd = 2.0/3.0;
+
 // ------- Glow module functions
 float glow_fwd( float ycIn, float glowGainIn, float glowMid)
 {
   float glowGainOut;
 
-  if ( ycIn <= 2. / 3. * glowMid)
+  if ( ycIn <= tthrd * glowMid)
     glowGainOut = glowGainIn;
   else if ( ycIn >= 2. * glowMid)
     glowGainOut = 0.;
@@ -46,7 +50,7 @@ float glow_inv( float ycOut, float glowGainIn, float glowMid)
 {
   float glowGainOut;
 
-  if ( ycOut <= ( ( 1. + glowGainIn) * 2. / 3. * glowMid))
+  if ( ycOut <= ( ( 1. + glowGainIn) * tthrd * glowMid))
     glowGainOut = -glowGainIn / ( 1. + glowGainIn);
   else if ( ycOut >= ( 2. * glowMid))
     glowGainOut = 0.;
@@ -72,10 +76,11 @@ float cubic_basis_shaper
     float w // full base width of the shaper function (in degrees)
   )
 {
-  float4x4 M = { { -1. / 6,  3. / 6, -3. / 6,  1. / 6 },
-                 {  3. / 6, -6. / 6,  3. / 6,  0. / 6 },
-                 { -3. / 6,  0. / 6,  3. / 6,  0. / 6 },
-                 {  1. / 6,  4. / 6,  1. / 6,  0. / 6 } };
+
+  float4x4 M = { { -sixth, +0.500, -0.500,  +sixth },
+                 { +0.500, -1.000, +0.500,  +0.000 },
+                 { -0.500, +0.000, +0.5000, +0.000 },
+                 { +sixth, +tthrd, +sixth,  +0.000 } };
 
   float knots[5] = { -w * 0.5,
                      -w * 0.25,
@@ -84,8 +89,8 @@ float cubic_basis_shaper
                      w * 0.5 };
 
   float y = 0.;
-  if ((x > knots[0]) && (x < knots[4])) {  
-    float knot_coord = (x - knots[0]) * 4./w;  
+  if ( ( x > knots[0]) && ( x < knots[4])) {  
+    float knot_coord = ( x - knots[0]) * 4./w;  
     int j = knot_coord;
     float t = knot_coord - j;
       
@@ -109,14 +114,14 @@ float cubic_basis_shaper
     }
   }
 
-  return y * 3. / 2.;
+  return y * 1.5;
 }
 
 float center_hue( float hue, float centerH)
 {
   float hueCentered = hue - centerH;
-  if (hueCentered < -180.) hueCentered += 360.;
-  else if (hueCentered > 180.) hueCentered -= 360.;
+  if ( hueCentered < -180.) hueCentered += 360.;
+  else if ( hueCentered > 180.) hueCentered -= 360.;
   return hueCentered;
 }
 
@@ -135,7 +140,7 @@ float3 rrt_sweeteners( float3 _in)
   // --- Glow module --- //
   float saturation = rgb_2_saturation( aces);
   float ycIn = rgb_2_yc( aces);
-  float s = sigmoid_shaper( ( saturation - 0.4) * 0.5);
+  float s = sigmoid_shaper( ( saturation - 0.4) * 5.);
   float addedGlow = 1. + glow_fwd( ycIn, RRT_GLOW_GAIN * s, RRT_GLOW_MID);
 
   aces = mult_f_f3( addedGlow, aces);
@@ -195,7 +200,7 @@ float3 inv_rrt_sweeteners( float3 _in)
   float saturation = rgb_2_saturation( aces);
   float ycOut = rgb_2_yc( aces);
   float s = sigmoid_shaper( ( saturation - 0.4) * 5.);
-  float reducedGlow = 1. + glow_inv( ycOut, RRT_GLOW_GAIN *s, RRT_GLOW_MID);
+  float reducedGlow = 1. + glow_inv( ycOut, RRT_GLOW_GAIN * s, RRT_GLOW_MID);
 
   aces = mult_f_f3( reducedGlow, aces);
   return aces;
