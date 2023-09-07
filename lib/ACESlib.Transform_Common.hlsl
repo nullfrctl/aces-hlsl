@@ -27,7 +27,10 @@ static const float TINY = 1e-10;
 
 float rgb_2_saturation( float3 rgb)
 {
-  return ( max( max_f3( rgb), TINY) - max( min_f3( rgb), TINY)) / max( max_f3( rgb), 1e-2);
+  // return ( max( max_f3( rgb), TINY) - max( min_f3( rgb), TINY)) / max( max_f3( rgb), 1e-2);
+  float min = min_f3( rgb);
+  float max = max_f3( rgb);
+  return ( max( max, TINY) - max( min, TINY)) / max( max, 1e-2);
 }
 
 #endif // _ACES_LIB_TRANSFORM_COMMON
