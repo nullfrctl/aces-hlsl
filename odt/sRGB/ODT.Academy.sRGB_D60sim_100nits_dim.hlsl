@@ -111,7 +111,7 @@ float3 ODT_sRGB_D60sim( float3 oces)
 
   // Handle out-of-gamut values
   // Clip values < or > 1 (projecting outside the display primaries)
-  linearCV = saturate(linearCV);
+  linearCV = saturate( linearCV);
 
   // Encode linear code values with transfer function
   float3 outputCV;
