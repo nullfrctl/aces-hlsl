@@ -28,7 +28,7 @@ static const float RRT_SAT_FACTOR = 0.96;
 static const float3x3 RRT_SAT_MAT = calc_sat_adjust_matrix( RRT_SAT_FACTOR, AP1_RGB2Y);// "Glow" module constants
 
 // one sixth and two thirds precomputed
-const float sixth = 1.0/6.0;
+static const float sixth = 1.0/6.0;
 static const float tthrd = 2.0/3.0;
 
 // ------- Glow module functions

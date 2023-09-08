@@ -52,7 +52,7 @@
 #include "../../lib/ACESlib.ODT_Common.hlsl"
 #include "../../lib/ACESlib.Tonescales.hlsl"
 
-float3 ODT_sRGB( float3 oces)
+float3 ODT_sRGB_D60sim( float3 oces)
 {
   /* --- ODT Parameters --- */
   const Chromaticities DISPLAY_PRI = REC709_PRI;

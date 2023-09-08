@@ -132,7 +132,7 @@ float3 outputTransform
    * observer adapted white point */
   
   if (!D60_SIM) {
-    if (DISPLAY_PRI.white != AP0.white) {
+    if (all(DISPLAY_PRI.white != AP0.white)) {
       float3x3 CAT = calculate_cat_matrix( AP0.white, DISPLAY_PRI.white);
       XYZ = mult_f3_f33( XYZ, CAT); // this is stupidly wrong in ACES ref., uses D60_2_D65 instead of CAT. needs fixing.
     }
@@ -154,9 +154,9 @@ float3 outputTransform
     
     float SCALE = 1.0;
 
-    if (DISPLAY_PRI.white == REC709_PRI.white) { // D65
+    if (all(DISPLAY_PRI.white == REC709_PRI.white)) { // D65
       SCALE = 0.96362;
-    } else if (DISPLAY_PRI.white == P3DCI_PRI.white) { // DCI
+    } else if (all(DISPLAY_PRI.white == P3DCI_PRI.white)) { // DCI
       linearCV.r = roll_white_fwd( linearCV.r, 0.918, 0.5);
       linearCV.g = roll_white_fwd( linearCV.g, 0.918, 0.5);
       linearCV.b = roll_white_fwd( linearCV.b, 0.918, 0.5);
@@ -195,18 +195,23 @@ float3 outputTransform
       outputCV = Y_2_ST2084_f3( clamp_f3( linCV_2_Y_f3( linearCV, Y_MAX, 0.0), 0.0, 65503.0));
     else
       outputCV = Y_2_ST2084_f3( linCV_2_Y_f3( linearCV, Y_MAX, Y_MIN));
+    break;
 
   case 1: // BT.1886 (Rec.709/2020)
     outputCV = bt1886_r_f3( linearCV, 2.4, 1.0, 0.0);
+    break;
 
   case 2: // sRGB
     outputCV = moncurve_r_f3( linearCV, 2.4, 0.055);
+    break;
   
   case 3: // gamma 2.6
     outputCV = pow_f3( linearCV, rcp( 2.6));
+    break;
   
   case 4: // linear (absolute luminance)
     outputCV = linCV_2_Y_f3( linearCV, Y_MAX, Y_MIN);
+    break;
   
   case 5: // HLG
     /* NOTE: HLG just maps ST.2084 to HLG
@@ -218,9 +223,11 @@ float3 outputTransform
       outputCV = Y_2_ST2084_f3( linCV_2_Y_f3( linearCV, Y_MAX, Y_MIN));
     
     outputCV = ST2084_2_HLG_1000nits_f3( outputCV);
+    break;
   
   default: // non-standard default. pass-through.
     outputCV = linearCV;
+    break;
   }
 
   if (LEGAL_RANGE)
@@ -275,18 +282,23 @@ float3 invOutputTransform
       linearCV = Y_2_linCV_f3( ST2084_2_Y_f3( outputCV), Y_MAX, 0.);
     else
       linearCV = Y_2_linCV_f3( ST2084_2_Y_f3( outputCV), Y_MAX, Y_MIN);
+    break;
 
   case 1: // BT.1886 (Rec.709/2020)
     linearCV = bt1886_f_f3( outputCV, 2.4, 1.0, 0.0);
+    break;
 
   case 2: // sRGB
     linearCV = moncurve_f_f3( outputCV, 2.4, 0.055);
+    break;
   
   case 3: // gamma 2.6
     linearCV = pow_f3( outputCV, 2.6);
+    break;
   
   case 4: // linear (absolute luminance)
     linearCV = Y_2_linCV_f3( outputCV, Y_MAX, Y_MIN);
+    break;
   
   case 5: // HLG
     outputCV = HLG_2_ST2084_1000nits_f3( outputCV);
@@ -295,9 +307,11 @@ float3 invOutputTransform
       linearCV = Y_2_linCV_f3( ST2084_2_Y_f3( outputCV), Y_MAX, 0.);
     else
       linearCV = Y_2_linCV_f3( ST2084_2_Y_f3( outputCV), Y_MAX, Y_MIN);
+    break;
   
   default: // non-standard default. pass-through.
     linearCV = outputCV;
+    break;
   }
 
   // Un-scale
@@ -309,11 +323,11 @@ float3 invOutputTransform
     
     float SCALE = 1.0;
 
-    if (DISPLAY_PRI.white == REC709_PRI.white) { // D65
+    if (all(DISPLAY_PRI.white == REC709_PRI.white)) { // D65
       SCALE = 0.96362;
 
       linearCV /= SCALE;
-    } else if (DISPLAY_PRI.white == P3DCI_PRI.white) { // DCI
+    } else if (all(DISPLAY_PRI.white == P3DCI_PRI.white)) { // DCI
       SCALE = 0.96;
 
       linearCV /= SCALE;
@@ -330,7 +344,7 @@ float3 invOutputTransform
 
   // Undo CAT from assumed observer adapted white point to ACES white point
   if ( !D60_SIM) {
-    if ( DISPLAY_PRI.white != AP0.white) {
+    if ( all( DISPLAY_PRI.white != AP0.white)) {
       float3x3 CAT = calculate_cat_matrix( AP0.white, DISPLAY_PRI.white);
       XYZ = mult_f3_f33( XYZ, invert_f33( CAT));
     }
