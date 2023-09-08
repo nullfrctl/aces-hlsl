@@ -72,9 +72,9 @@ float sigmoid_shaper( float x)
 
 // ------- Red modifier functions
 float cubic_basis_shaper
-  ( float x,
-    float w // full base width of the shaper function (in degrees)
-  )
+( float x,
+  float w // full base width of the shaper function (in degrees)
+)
 {
 
   float4x4 M = { { -sixth, +0.500, -0.500,  +sixth },
@@ -100,16 +100,20 @@ float cubic_basis_shaper
     if ( j == 3) {
       y = monomials[0] * M[0][0] + monomials[1] * M[1][0] + 
           monomials[2] * M[2][0] + monomials[3] * M[3][0];
-    } else if ( j == 2) {
+    } 
+    else if ( j == 2) {
       y = monomials[0] * M[0][1] + monomials[1] * M[1][1] + 
           monomials[2] * M[2][1] + monomials[3] * M[3][1];
-    } else if ( j == 1) {
+    } 
+    else if ( j == 1) {
       y = monomials[0] * M[0][2] + monomials[1] * M[1][2] + 
           monomials[2] * M[2][2] + monomials[3] * M[3][2];
-    } else if ( j == 0) {
+    } 
+    else if ( j == 0) {
       y = monomials[0] * M[0][3] + monomials[1] * M[1][3] + 
           monomials[2] * M[2][3] + monomials[3] * M[3][3];
-    } else {
+    } 
+    else {
       y = 0.0;
     }
   }

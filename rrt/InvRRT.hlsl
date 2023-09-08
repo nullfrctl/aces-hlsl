@@ -28,7 +28,7 @@ float3 InvRRT( float3 oces)
   rgbPost.g = segmented_spline_c5_rev( rgbPre.g);
   rgbPost.b = segmented_spline_c5_rev( rgbPre.b);
 
-	float3 aces = inv_rrt_sweeteners(rgbPost);
+	float3 aces = inv_rrt_sweeteners( rgbPost);
 
 	/*
 	// --- Global desaturation --- //

@@ -16,7 +16,7 @@ static const float HALF_NEG_INF = -65536.;
 
 float fabs( float a1)
 {
-  return abs(a1);
+  return abs( a1);
 }
 
 float pow10( float a1)
@@ -24,66 +24,66 @@ float pow10( float a1)
   return pow( 10., a1);
 }
 
-float3 mult_f_f3(float a1, float3 a2)
+float3 mult_f_f3( float a1, float3 a2)
 {
   return a1 * a2;
 }
 
-float3x3 mult_f33_f33(float3x3 a1, float3x3 a2)
+float3x3 mult_f33_f33( float3x3 a1, float3x3 a2)
 {
-  return mul(a1, a2);
+  return mul( a1, a2);
 }
 
-float4x4 mult_f44_f44(float4x4 a1, float4x4 a2)
+float4x4 mult_f44_f44( float4x4 a1, float4x4 a2)
 {
-  return mul(a1, a2);
+  return mul( a1, a2);
 }
 
-float3x3 mult_f_f33(float a1, float3x3 a2)
+float3x3 mult_f_f33( float a1, float3x3 a2)
 {
-  return mul(a1, a2);
+  return mul( a1, a2);
 }
 
-float4x4 mult_f_f44(float a1, float4x4 a2)
+float4x4 mult_f_f44( float a1, float4x4 a2)
 {
-  return mul(a1, a2);
+  return mul( a1, a2);
 }
 
-float3 mult_f3_f33(float3 a1, float3x3 a2)
+float3 mult_f3_f33( float3 a1, float3x3 a2)
 {
-  return mul(a1, a2);
+  return mul( a1, a2);
 }
 
-float3x3 transpose_f33(float3x3 a1)
+float3x3 transpose_f33( float3x3 a1)
 {
-  return transpose(a1);
+  return transpose( a1);
 }
 
 float4x4 transpose_f44(float4x4 a1)
 {
-  return transpose(a1);
+  return transpose( a1);
 }
 
 float dot_f3_f3(float3 a1, float3 a2)
 {
-  return dot(a1, a2);
+  return dot( a1, a2);
 }
 
 float3x3 invert_f33(float3x3 m)
 {
   float3x3 adj;
-  adj[0][0] =  (m[1][1] * m[2][2] - m[1][2] * m[2][1]); 
-  adj[0][1] = -(m[0][1] * m[2][2] - m[0][2] * m[2][1]); 
-  adj[0][2] =  (m[0][1] * m[1][2] - m[0][2] * m[1][1]);
-  adj[1][0] = -(m[1][0] * m[2][2] - m[1][2] * m[2][0]);
-  adj[1][1] =  (m[0][0] * m[2][2] - m[0][2] * m[2][0]); 
-  adj[1][2] = -(m[0][0] * m[1][2] - m[0][2] * m[1][0]);
-  adj[2][0] =  (m[1][0] * m[2][1] - m[1][1] * m[2][0]); 
-  adj[2][1] = -(m[0][0] * m[2][1] - m[0][1] * m[2][0]); 
-  adj[2][2] =  (m[0][0] * m[1][1] - m[0][1] * m[1][0]); 
+  adj[0][0] =  ( m[1][1] * m[2][2] - m[1][2] * m[2][1]); 
+  adj[0][1] = -( m[0][1] * m[2][2] - m[0][2] * m[2][1]); 
+  adj[0][2] =  ( m[0][1] * m[1][2] - m[0][2] * m[1][1]);
+  adj[1][0] = -( m[1][0] * m[2][2] - m[1][2] * m[2][0]);
+  adj[1][1] =  ( m[0][0] * m[2][2] - m[0][2] * m[2][0]); 
+  adj[1][2] = -( m[0][0] * m[1][2] - m[0][2] * m[1][0]);
+  adj[2][0] =  ( m[1][0] * m[2][1] - m[1][1] * m[2][0]); 
+  adj[2][1] = -( m[0][0] * m[2][1] - m[0][1] * m[2][0]); 
+  adj[2][2] =  ( m[0][0] * m[1][1] - m[0][1] * m[1][0]); 
 
-  float det = dot(float3(adj[0][0], adj[0][1], adj[0][2]), float3(m[0][0], m[1][0], m[2][0]));
-  return adj * rcp(det + (abs(det) < 1e-8));
+  float det = dot( float3( adj[0][0], adj[0][1], adj[0][2]), float3( m[0][0], m[1][0], m[2][0]));
+  return adj * rcp( det + ( abs( det) < 1e-8));
 }
 
 float4x4 invert_f44(float4x4 m)  
@@ -109,8 +109,8 @@ float4x4 invert_f44(float4x4 m)
   adj[3][2] = m[3][0] * m[1][1] * m[0][2] - m[1][0] * m[3][1] * m[0][2] - m[3][0] * m[0][1] * m[1][2] + m[0][0] * m[3][1] * m[1][2] + m[1][0] * m[0][1] * m[3][2] - m[0][0] * m[1][1] * m[3][2];
   adj[3][3] = m[1][0] * m[2][1] * m[0][2] - m[2][0] * m[1][1] * m[0][2] + m[2][0] * m[0][1] * m[1][2] - m[0][0] * m[2][1] * m[1][2] - m[1][0] * m[0][1] * m[2][2] + m[0][0] * m[1][1] * m[2][2];
 
-  float det = dot(float4(adj[0][0], adj[1][0], adj[2][0], adj[3][0]), float4(m[0][0], m[0][1],  m[0][2],  m[0][3]));
-  return adj * rcp(det + (abs(det) < 1e-8));
+  float det = dot( float4( adj[0][0], adj[1][0], adj[2][0], adj[3][0]), float4( m[0][0], m[0][1],  m[0][2],  m[0][3]));
+  return adj * rcp( det + ( abs( det) < 1e-8));
 }
 
 struct Chromaticities
@@ -179,7 +179,7 @@ float3x3 RGBtoXYZ( const Chromaticities chroma, float Y)
 
 float3x3 XYZtoRGB( const Chromaticities chroma, float Y)
 {
-  return invert_f33(RGBtoXYZ(chroma, Y));
+  return invert_f33( RGBtoXYZ( chroma, Y));
 }
 
 // only use for special cases; labelled different because of this

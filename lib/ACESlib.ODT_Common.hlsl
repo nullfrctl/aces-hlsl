@@ -69,7 +69,7 @@ float3 darkSurround_to_dimSurround( float3 linearCV)
 
   xyY.z = clamp( xyY.z, 0., HALF_POS_INF);
   xyY.z = pow( xyY.z, rcp( DIM_SURROUND_GAMMA));
-  XYZ = xyY_2_XYZ(xyY);
+  XYZ = xyY_2_XYZ( xyY);
 
   return mult_f3_f33( XYZ, XYZ_2_AP1_MAT);
 }
@@ -81,7 +81,7 @@ float3 dimSurround_to_darkSurround( float3 linearCV)
 
   xyY.z = clamp( xyY.z, 0., HALF_POS_INF);
   xyY.z = pow( xyY.z, rcp( DIM_SURROUND_GAMMA));
-  XYZ = xyY_2_XYZ(xyY);
+  XYZ = xyY_2_XYZ( xyY);
 
   return mult_f3_f33( XYZ, XYZ_2_AP1_MAT);
 }
@@ -90,10 +90,10 @@ float3 dimSurround_to_darkSurround( float3 linearCV)
 // allow for simulated white points without clipping
 
 float roll_white_fwd
-  ( float _in, // color value to adjust (white scaled to around 1.0)
-    float new_wht, // white adjustment (e.g. 0.9 for 10% darkening)
-    float width // adjusted width (e.g. 0.25 for top quarter of the tone scale)
-  )
+( float _in,     // color value to adjust (white scaled to around 1.0)
+  float new_wht, // white adjustment (e.g. 0.9 for 10% darkening)
+  float width    // adjusted width (e.g. 0.25 for top quarter of the tone scale)
+)
 {
   const float x0 = -1.;
   const float x1 = x0 + width;
@@ -118,10 +118,10 @@ float roll_white_fwd
 }
 
 float roll_white_rev
-  ( float _in, // color value to adjust (white scaled to around 1.0)
-    float new_wht, // white adjustment (e.g. 0.9 for 10% darkening)
-    float width // adjusted width (e.g. 0.25 for top quarter of the tone scale)
-  )
+( float _in,     // color value to adjust (white scaled to around 1.0)
+  float new_wht, // white adjustment (e.g. 0.9 for 10% darkening)
+  float width    // adjusted width (e.g. 0.25 for top quarter of the tone scale)
+)
 {
   const float x0 = -1.0;
   const float x1 = x0 + width;
