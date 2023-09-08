@@ -1,5 +1,5 @@
-#ifndef _ACESODT_sRGB_D60SIM_100NITS_DIM
-#define _ACESODT_sRGB_D60SIM_100NITS_DIM
+#ifndef _ACESODT_sRGB_D60SIM_100NITS_DIM_
+#define _ACESODT_sRGB_D60SIM_100NITS_DIM_
 
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:ODT.Academy.RGBmonitor_D60si_100nits_dim.a1.0.3</ACEStransformID>
 // <ACESuserName>ACES 1.0 Output - sRGB (D60 sim.)</ACESuserName>
@@ -122,4 +122,4 @@ float3 ODT_sRGB_D60sim( float3 oces)
   return outputCV;
 }
 
-#endif
+#endif // _ACESODT_sRGB_D60SIM_100NITS_DIM_

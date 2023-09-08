@@ -1,5 +1,5 @@
-#ifndef _ACESODT_sRGB_100NITS_DIM
-#define _ACESODT_sRGB_100NITS_DIM
+#ifndef _ACESODT_sRGB_100NITS_DIM_
+#define _ACESODT_sRGB_100NITS_DIM_
 
 // <ACEStransformID>urn:ampas:aces:transformId:v1.5:ODT.Academy.RGBmonitor_100nits_dim.a1.0.3</ACEStransformID>
 // <ACESuserName>ACES 1.0 Output - sRGB</ACESuserName>
@@ -105,5 +105,4 @@ float3 ODT_sRGB( float3 oces)
 
   return outputCV;
 }
-
-#endif
+#endif // _ACESODT_sRGB_100NITS_DIM_
