@@ -340,11 +340,11 @@ float moncurve_f( float x, float gamma, float offs)
 {
   // Forward monitor curve
   float y;
-  const float fs = (( gamma - 1.0) / offs) * pow( offs * gamma / ( ( gamma - 1.) * ( 1. + offs)), gamma);
+  const float fs = (( gamma - 1.0) / offs) * pow( offs * gamma / ( ( gamma - 1.0) * ( 1.0 + offs)), gamma);
   const float xb = offs / ( gamma - 1.0);
 
   if ( x >= xb)
-    y = pow( ( x + offs) / ( 1. + offs), gamma);
+    y = pow( ( x + offs) / ( 1.0 + offs), gamma);
   else
     y = x * fs;
   
@@ -355,11 +355,11 @@ float moncurve_r( float y, float gamma, float offs)
 {
   // Reverse monitor curve
   float x;
-  const float yb = pow( offs * gamma / ( ( gamma - 1.) * ( 1. + offs)), gamma);
-  const float rs = pow( ( gamma - 1.) / offs, gamma - 1.) * pow( ( 1. + offs) / gamma, gamma);
+  const float yb = pow( offs * gamma / ( ( gamma - 1.0) * ( 1.0 + offs)), gamma);
+  const float rs = pow( ( gamma - 1.0) / offs, gamma - 1.0) * pow( ( 1.0 + offs) / gamma, gamma);
 
   if ( y >= yb)
-    x = ( 1. + offs) * pow( y, rcp( gamma));
+    x = ( 1.0 + offs) * pow( y, 1.0 / gamma) - offs;
   else
     x = y * rs;
 
@@ -370,9 +370,9 @@ float3 moncurve_f_f3( float3 x, float gamma, float offs)
 {
   float3 y;
 
-  y.x = moncurve_f( x.x, gamma, offs);
-  y.y = moncurve_f( x.y, gamma, offs);
-  y.z = moncurve_f( x.z, gamma, offs);
+  y.r = moncurve_f( x.r, gamma, offs);
+  y.g = moncurve_f( x.g, gamma, offs);
+  y.b = moncurve_f( x.b, gamma, offs);
 
   return y;
 }
@@ -381,9 +381,9 @@ float3 moncurve_r_f3( float3 y, float gamma, float offs)
 {
   float3 x;
 
-  x.x = moncurve_r( y.x, gamma, offs);
-  x.y = moncurve_r( y.y, gamma, offs);
-  x.z = moncurve_r( y.z, gamma, offs);
+  x.r = moncurve_r( y.r, gamma, offs);
+  x.g = moncurve_r( y.g, gamma, offs);
+  x.b = moncurve_r( y.b, gamma, offs);
 
   return x;
 }

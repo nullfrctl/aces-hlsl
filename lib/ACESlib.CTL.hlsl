@@ -183,10 +183,10 @@ float3x3 XYZtoRGB( const Chromaticities chroma, float Y)
 }
 
 // only use for special cases; labelled different because of this
-float HACK_interpolate1D( const float table[2][2], float value)
+float HACK_interpolate1D( const float2 table[2], float value)
 {
-  float t = saturate( ( value - table[0][0]) / ( table[1][0] - table[0][0]));
-  return lerp( table[0][1], table[1][1], t);
+  float t = saturate( ( value - table[0].x) / ( table[1].x - table[0].x));
+  return lerp( table[0].y, table[1].y, t);
 }
 
 #endif // _ACESLIB_CTL_

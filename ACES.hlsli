@@ -1,10 +1,12 @@
 #ifndef _ACES_
 #define _ACES_
 
-// clang-format off
-
 /* NOTE: Libraries have to be imported in this specific order for frameworks
- * like ENBSeries. */
+ * like ENBSeries. Another note for ENBSeries, instead of including this,
+ * copy everything after `// clang-format off` to before `// clang-format on`
+ * (including those lines). */
+
+// clang-format off
 
 // Import libraries
 #include "lib/ACESlib.CTL.hlsl"
@@ -14,8 +16,8 @@
 #include "lib/ACESlib.ODT_Common.hlsl"
 #include "lib/ACESlib.RRT_Common.hlsl"
 #include "lib/ACESlib.Tonescales.hlsl"
-#include "lib/ACESlib.SSTS.hlsl"
-#include "lib/ACESlib.OutputTransforms.hlsl"
+// #include "lib/ACESlib.SSTS.hlsl"
+// #include "lib/ACESlib.OutputTransforms.hlsl"
 
 // Import CSC
 #include "csc/ACEScc/ACEScsc.Academy.ACES_to_ACEScc.hlsl"

@@ -51,23 +51,22 @@ const float MAX_LUM_RRT = 10000.0;
 
 float lookup_ACESmin( float minLum)
 {
-  const float minTable[2][2] = { { log10( MIN_LUM_RRT), MIN_STOP_RRT },
-                                 { log10( MIN_LUM_SDR), MIN_STOP_SDR } };
+  const float2 minTable[2] = { float2( log10( MIN_LUM_RRT), MIN_STOP_RRT),
+                               float2( log10( MIN_LUM_SDR), MIN_STOP_SDR) };
 
   return 0.18 * exp2( HACK_interpolate1D( minTable, log10( minLum)));
 }
 
 float lookup_ACESmax( float maxLum)
 {
-  const float maxTable[2][2] = { { log10( MAX_LUM_SDR), MAX_STOP_SDR },
-                                 { log10( MAX_LUM_RRT), MAX_STOP_RRT } };
+  const float2 maxTable[2] = { float2( log10( MAX_LUM_SDR), MAX_STOP_SDR),
+                               float2( log10( MAX_LUM_RRT), MAX_STOP_RRT) };
 
   return 0.18 * exp2( HACK_interpolate1D( maxTable, log10( maxLum)));
 }
 
 void init_coefsLow
-(
-  TsPoint TsPointLow,
+( TsPoint TsPointLow,
   TsPoint TsPointMid,
   out float coefsLow[5]
 )
@@ -83,16 +82,15 @@ void init_coefsLow
   coefsLow[4] = ( TsPointMid.slope * ( log10( TsPointMid.x) + 0.5 * knotIncLow)) + ( log10( TsPointMid.y) - TsPointMid.slope * log10( TsPointMid.x));
 
   // Middle coefficient (defines the "sharpness of the bend") is linearly interpolated
-  float bendsLow[2][2] = { { MIN_STOP_RRT, 0.18},
-                           { MIN_STOP_SDR, 0.35} };
+  float2 bendsLow[2] = { float2( MIN_STOP_RRT, 0.18),
+                         float2( MIN_STOP_SDR, 0.35) };
 
   float pctLow = HACK_interpolate1D( bendsLow, log2( TsPointLow.x / 0.18));
   coefsLow[2] = log10( TsPointLow.y) + pctLow * ( log10( TsPointMid.y) - log10( TsPointLow.y));
 }
 
 void init_coefsHigh
-(
-  TsPoint TsPointMid,
+( TsPoint TsPointMid,
   TsPoint TsPointMax,
   out float coefsHigh[5]
 )
@@ -108,8 +106,8 @@ void init_coefsHigh
   coefsHigh[4] = ( TsPointMax.slope * ( log10( TsPointMax.x) + 0.5 * knotIncHigh)) + ( log10( TsPointMax.y) - TsPointMax.slope * log10( TsPointMax.x));
 
   // Middle coefficient (defines the "sharpness of the bend") is linearly interpolated
-  float bendsHigh[2][2] = { { MAX_STOP_SDR, 0.89 },
-                            { MAX_STOP_RRT, 0.90 } };
+  float2 bendsHigh[2] = { float2( MAX_STOP_SDR, 0.89),
+                          float2( MAX_STOP_RRT, 0.90) };
 
   float pctHigh = HACK_interpolate1D( bendsHigh, log2( TsPointMax.x / 0.18));
   coefsHigh[2] = log10( TsPointMid.y) + pctHigh * ( log10( TsPointMax.y) - log10( TsPointMid.y));
@@ -121,8 +119,7 @@ float shift( float _in, float expShift)
 }
 
 TsParams init_TsParams
-(
-  float minLum,
+( float minLum,
   float maxLum,
   float expShift = 0.0
 )
@@ -132,7 +129,7 @@ TsParams init_TsParams
   TsPoint MAX_PT = { lookup_ACESmax( maxLum), maxLum, 0.0 };
 
   float cLow[5]; init_coefsLow( MIN_PT, MID_PT, cLow);
-  float cHigh[5]; init_coefsHigh( MIN_PT, MID_PT, cHigh);
+  float cHigh[5]; init_coefsHigh( MID_PT, MAX_PT, cHigh);
 
   MIN_PT.x = shift( lookup_ACESmin( minLum), expShift);
   MID_PT.x = shift( 0.18, expShift);
@@ -150,8 +147,7 @@ TsParams init_TsParams
 }
 
 float ssts
-(
-  const float x,
+( const float x,
   const TsParams C
 )
 {
@@ -165,7 +161,8 @@ float ssts
 
   if ( logx <= log10( C.Min.x)) {
     logy = logx * C.Min.slope + ( log10( C.Min.y) - C.Min.slope * log10( C.Min.x));
-  } else if ( ( logx > log10( C.Min.x)) && ( logx < log10( C.Mid.x))) {
+  } 
+  else if ( ( logx > log10( C.Min.x)) && ( logx < log10( C.Mid.x))) {
     float knot_coord = ( N_KNOTS_LOW - 1) * ( logx - log10( C.Min.x)) / ( log10( C.Mid.x) - log10( C.Min.x));
     int j = knot_coord;
     float t = knot_coord - j;
@@ -174,7 +171,8 @@ float ssts
 
     float3 monomials = { t * t, t, 1.0 };
     logy = dot_f3_f3( monomials, mult_f3_f33( cf, M1));
-  } else if ( ( logx >= log10( C.Mid.x)) && ( logx < log10( C.Max.x))) {
+  } 
+  else if ( ( logx >= log10( C.Mid.x)) && ( logx < log10( C.Max.x))) {
     float knot_coord = ( N_KNOTS_HIGH - 1) * ( logx - log10( C.Mid.x)) / ( log10(C.Max.x) - log10( C.Mid.x));
     int j = knot_coord;
     float t = knot_coord - j;
@@ -183,7 +181,8 @@ float ssts
 
     float3 monomials = { t * t, t, 1.0 };
     logy = dot_f3_f3( monomials, mult_f3_f33( cf, M1));
-  } else { // if ( logIn >= log10( C.Max.x)) {
+  } 
+  else { // if ( logIn >= log10( C.Max.x)) {
     logy = logx * C.Max.slope + ( log10( C.Max.y) - C.Max.slope * log10( C.Max.x));
   }
 
@@ -191,8 +190,7 @@ float ssts
 }
 
 float inv_ssts
-(
-  const float y,
+( const float y,
   const TsParams C
 )
 {
@@ -218,8 +216,9 @@ float inv_ssts
   float logx;
   if ( logy <= log10( C.Min.y)) {
     logx = log10( C.Min.x);
-  } else if ( ( logy > log10( C.Min.y)) && ( logy <= log10( C.Mid.y))) {
-    uint j;
+  } 
+  else if ( ( logy > log10( C.Min.y)) && ( logy <= log10( C.Mid.y))) {
+    int j;
     float3 cf;
 
     if ( logy > KNOT_Y_LOW[0] && logy <= KNOT_Y_LOW[1]) {
@@ -227,12 +226,14 @@ float inv_ssts
       cf.y = C.coefsLow[1];
       cf.z = C.coefsLow[2];
       j = 0;
-    } else if (logy > KNOT_Y_LOW[1] && logy <= KNOT_Y_LOW[2]) {
+    } 
+    else if (logy > KNOT_Y_LOW[1] && logy <= KNOT_Y_LOW[2]) {
       cf.x = C.coefsLow[1];
       cf.y = C.coefsLow[2];
       cf.z = C.coefsLow[3];
       j = 1;
-    } else if (logy > KNOT_Y_LOW[2] && logy <= KNOT_Y_LOW[3]) {
+    } 
+    else if (logy > KNOT_Y_LOW[2] && logy <= KNOT_Y_LOW[3]) {
       cf.x = C.coefsLow[2];
       cf.y = C.coefsLow[3];
       cf.z = C.coefsLow[4];
@@ -244,15 +245,16 @@ float inv_ssts
     float a = tmp.x;
     float b = tmp.y;
     float c = tmp.z;
-    c = c - logy;
+    c -= logy;
 
     const float d = sqrt( b * b - 4. * a * c);
 
     const float t = ( 2. * c) / ( -d - b);
 
     logx = log10( C.Min.x) + ( t + j) * KNOT_INC_LOW;
-  } else if ( ( logy > log10( C.Mid.y)) && ( logy < log10( C.Max.y))) {
-    uint j;
+  } 
+  else if ( ( logy > log10( C.Mid.y)) && ( logy < log10( C.Max.y))) {
+    int j;
     float3 cf;
 
     if ( logy >= KNOT_Y_HIGH[0] && logy <= KNOT_Y_HIGH[1]) {
@@ -260,12 +262,14 @@ float inv_ssts
       cf.y = C.coefsHigh[1];
       cf.z = C.coefsHigh[2];
       j = 0;
-    } else if (logy > KNOT_Y_HIGH[1] && logy <= KNOT_Y_HIGH[2]) {
+    } 
+    else if (logy > KNOT_Y_HIGH[1] && logy <= KNOT_Y_HIGH[2]) {
       cf.x = C.coefsHigh[1];
       cf.y = C.coefsHigh[2];
       cf.z = C.coefsHigh[3];
       j = 1;
-    } else if (logy > KNOT_Y_HIGH[2] && logy <= KNOT_Y_HIGH[3]) {
+    } 
+    else if (logy > KNOT_Y_HIGH[2] && logy <= KNOT_Y_HIGH[3]) {
       cf.x = C.coefsHigh[2];
       cf.y = C.coefsHigh[3];
       cf.z = C.coefsHigh[4];
@@ -277,14 +281,15 @@ float inv_ssts
     float a = tmp.x;
     float b = tmp.y;
     float c = tmp.z;
-    c = c - logy;
+    c -= logy;
 
     const float d = sqrt( b * b - 4. * a * c);
 
     const float t = ( 2. * c) / ( -d - b);
 
     logx = log10( C.Mid.x) + ( t + j) * KNOT_INC_HIGH;
-  } else { //if ( logy >= log10(C.Max.y) ) {
+  } 
+  else { //if ( logy >= log10(C.Max.y) ) {
     logx = log10( C.Max.x);
   }
 
@@ -292,8 +297,7 @@ float inv_ssts
 }
 
 float3 ssts_f3
-(
-  const float3 x,
+( const float3 x,
   const TsParams C
 )
 {
@@ -306,8 +310,7 @@ float3 ssts_f3
 }
 
 float3 inv_ssts_f3
-(
-  const float3 x,
+( const float3 x,
   const TsParams C
 )
 {
