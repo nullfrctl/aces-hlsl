@@ -82,11 +82,11 @@ float cubic_basis_shaper
                  { -0.500, +0.000, +0.5000, +0.000 },
                  { +sixth, +tthrd, +sixth,  +0.000 } };
 
-  float knots[5] = { -w * 0.5,
-                     -w * 0.25,
+  float knots[5] = { w * -0.5,
+                     w * -0.25,
                      0.,
-                     w * 0.25,
-                     w * 0.5 };
+                     w * +0.25,
+                     w * +0.5 };
 
   float y = 0.;
   if ( ( x > knots[0]) && ( x < knots[4])) {  

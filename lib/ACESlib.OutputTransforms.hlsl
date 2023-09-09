@@ -76,7 +76,8 @@ float3 outputTransform
   TsParams PARAMS = init_TsParams( Y_MIN, Y_MAX, expShift);
 
   // RRT sweeteners
-  float3 rgbPre = rrt_sweeteners( _in);
+  // float3 rgbPre = rrt_sweeteners( _in);
+  float3 rgbPre = mult_f3_f33( _in, AP0_2_AP1_MAT);
 
   // Apply the tonescale independently in rendering-space RGB
   float3 rgbPost = ssts_f3( rgbPre, PARAMS);
@@ -389,7 +390,8 @@ float3 invOutputTransform
   float3 rgbPre = inv_ssts_f3( rgbPost, PARAMS);
 
   // RRT sweeteners
-  float3 aces = inv_rrt_sweeteners( rgbPre);
+  // float3 aces = inv_rrt_sweeteners( rgbPre);
+  float3 aces = mult_f3_f33( rgbPre, AP1_2_AP0_MAT);
 
   return aces;
 }
